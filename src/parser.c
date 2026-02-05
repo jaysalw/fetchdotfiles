@@ -43,7 +43,11 @@ int parse_dotfile(const char *filename, int force) {
     int errors = 0;
     int end_fetch_found = 0;
     
-    // Always use repo_tmp as base directory for dotfiles
+    // Config options
+    char default_dir[256] = "dotfiles";  // Default subdirectory
+    int select_from_root = 0;            // If true, ignore default_dir
+    
+    // Always use repo_tmp as base directory
     const char *repo_dir = "repo_tmp";
     
     while (fgets(line, sizeof(line), fp)) {
@@ -60,11 +64,36 @@ int parse_dotfile(const char *filename, int force) {
             break;
         }
         
+        // Parse CONFIG commands
+        char config_key[64], config_val[256];
+        if (sscanf(trimmed, "CONFIG %s = %s", config_key, config_val) == 2) {
+            if (strcmp(config_key, "default_dir") == 0) {
+                strncpy(default_dir, config_val, sizeof(default_dir) - 1);
+                default_dir[sizeof(default_dir) - 1] = '\0';
+                printf(DYELLOW "[" YELLOW " CONFIG " DYELLOW "]" RESET " default_dir = %s\n", default_dir);
+            } else if (strcmp(config_key, "select_from_root") == 0) {
+                if (strcmp(config_val, "True") == 0 || strcmp(config_val, "true") == 0 || strcmp(config_val, "1") == 0) {
+                    select_from_root = 1;
+                    printf(DYELLOW "[" YELLOW " CONFIG " DYELLOW "]" RESET " select_from_root = True\n");
+                } else {
+                    select_from_root = 0;
+                    printf(DYELLOW "[" YELLOW " CONFIG " DYELLOW "]" RESET " select_from_root = False\n");
+                }
+            } else {
+                printf(DYELLOW "[" YELLOW " WARNING " DYELLOW "]" RESET " Unknown config key: %s\n", config_key);
+            }
+            continue;
+        }
+        
         // Parse PUT command
         if (sscanf(trimmed, "PUT %s IN %s", src, dest) == 2) {
-            // Build full source path: repo_tmp/dotfiles/src
+            // Build full source path based on config
             char full_src[600];
-            snprintf(full_src, sizeof(full_src), "%s/dotfiles/%s", repo_dir, src);
+            if (select_from_root) {
+                snprintf(full_src, sizeof(full_src), "%s/%s", repo_dir, src);
+            } else {
+                snprintf(full_src, sizeof(full_src), "%s/%s/%s", repo_dir, default_dir, src);
+            }
             
             printf(DBLUE "[" BLUE " TASK " DBLUE "]" RESET " Placing %s -> %s\n", src, dest);
             if (place_dotfile(full_src, dest, force) != 0) {
@@ -89,7 +118,8 @@ int parse_dotfile(const char *filename, int force) {
         // Unknown/invalid syntax
         else {
             printf(DRED "[" RED " SYNTAX ERROR " DRED "]" RESET " Line %d: %s\n", line_num, trimmed);
-            printf("         Expected: PUT <file> IN <path>\n");
+            printf("         Expected: CONFIG <key> = <value>\n");
+            printf("                   PUT <file> IN <path>\n");
             printf("                   EXECUTE \"<command>\"\n");
             printf("                   ECHO \"<message>\"\n");
             printf("                   END FETCH\n");
