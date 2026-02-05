@@ -4,25 +4,28 @@
 #include "parser.h"
 
 // ANSI Color Codes
-#define RESET   "\033[0m"
-#define RED     "\033[1;31m"
-#define GREEN   "\033[1;32m"
-#define YELLOW  "\033[1;33m"
-#define BLUE    "\033[1;34m"
-#define MAGENTA "\033[1;35m"
-#define CYAN    "\033[1;36m"
-#define WHITE   "\033[1;37m"
+#define RESET    "\033[0m"
+#define RED      "\033[1;31m"
+#define DRED     "\033[0;31m"
+#define GREEN    "\033[1;32m"
+#define DGREEN   "\033[0;32m"
+#define YELLOW   "\033[1;33m"
+#define DYELLOW  "\033[0;33m"
+#define BLUE     "\033[1;34m"
+#define DBLUE    "\033[0;34m"
+#define CYAN     "\033[1;36m"
+#define DCYAN    "\033[0;36m"
 
 void print_usage() {
-    printf(CYAN "╔══════════════════════════════════════════╗\n" RESET);
-    printf(CYAN "║" YELLOW "       FDF - Fetch Dot Files              " CYAN "║\n" RESET);
-    printf(CYAN "╚══════════════════════════════════════════╝\n" RESET);
-    printf(WHITE "Usage:\n" RESET);
-    printf("  " GREEN "fdf" RESET " --repo <repo_url> [--force-placement]\n");
-    printf("  " GREEN "fdf" RESET " -r <repo_url> [-f]\n\n");
-    printf(MAGENTA "Options:\n" RESET);
-    printf("  " CYAN "-r, --repo" RESET "            Repository URL (git/GitHub)\n");
-    printf("  " CYAN "-f, --force-placement" RESET "  Overwrite existing files\n");
+    printf("\n");
+    printf(CYAN "FDF" RESET " - Fetch Dot Files\n");
+    printf("-----------------------------------\n\n");
+    printf("Usage:\n");
+    printf("  fdf --repo <repo_url> [--force-placement]\n");
+    printf("  fdf -r <repo_url> [-f]\n\n");
+    printf("Options:\n");
+    printf("  -r, --repo             Repository URL (git/GitHub)\n");
+    printf("  -f, --force-placement  Overwrite existing files\n\n");
 }
 
 
@@ -48,7 +51,7 @@ int main(int argc, char *argv[]) {
     }
     char cmd[1024];
     snprintf(cmd, sizeof(cmd), "git clone %s repo_tmp", repo);
-    printf(CYAN "\n🔄 Cloning repository: " YELLOW "%s" RESET "\n\n", repo);
+    printf(DCYAN "[" CYAN " INFO " DCYAN "]" RESET " Cloning repository: %s\n\n", repo);
     system(cmd);
 
     // Find all .fdf files in repo_tmp
@@ -70,30 +73,30 @@ int main(int argc, char *argv[]) {
     }
 
     if (fdf_count == 0) {
-        printf(RED "\n❌ No .fdf files found in repo_tmp\n" RESET);
+        printf(DRED "[" RED " ERROR " DRED "]" RESET " No .fdf files found in repo_tmp\n");
         system("rm -rf repo_tmp");
         return 1;
     }
 
     int selected = 0;
     if (fdf_count > 1) {
-        printf(YELLOW "\n📂 Multiple .fdf files found:\n" RESET);
+        printf(DYELLOW "[" YELLOW " INFO " DYELLOW "]" RESET " Multiple .fdf files found:\n");
         for (int i = 0; i < fdf_count; ++i) {
-            printf("  " CYAN "[%d]" RESET " %s\n", i+1, fdf_files[i]);
+            printf("         [%d] %s\n", i+1, fdf_files[i]);
         }
-        printf(WHITE "\nSelect which .fdf file to use [1-%d]: " RESET, fdf_count);
+        printf("         Select file [1-%d]: ", fdf_count);
         scanf("%d", &selected);
         if (selected < 1 || selected > fdf_count) {
-            printf(RED "❌ Invalid selection.\n" RESET);
+            printf(DRED "[" RED " ERROR " DRED "]" RESET " Invalid selection.\n");
             system("rm -rf repo_tmp");
             return 1;
         }
         selected--;
     } else {
-        printf(GREEN "\n✔ Found: " RESET "%s\n", fdf_files[0]);
+        printf(DGREEN "[" GREEN " INFO " DGREEN "]" RESET " Found: %s\n", fdf_files[0]);
     }
 
-    printf(CYAN "\n🚀 Processing dotfile...\n\n" RESET);
+    printf(DBLUE "[" BLUE " TASK " DBLUE "]" RESET " Processing dotfile...\n\n");
     parse_dotfile(fdf_files[selected], force);
 
     // Free allocated memory
@@ -104,8 +107,7 @@ int main(int argc, char *argv[]) {
     // Clean up cloned repo
     system("rm -rf repo_tmp");
 
-    printf(GREEN "\n╔══════════════════════════════════════════╗\n" RESET);
-    printf(GREEN "║  ✅ SUCCESS! Dotfiles applied!           ║\n" RESET);
-    printf(GREEN "╚══════════════════════════════════════════╝\n\n" RESET);
+    printf("\n");
+    printf(DGREEN "[" GREEN " SUCCESS " DGREEN "]" RESET " Dotfiles applied successfully!\n\n");
     return 0;
 }
