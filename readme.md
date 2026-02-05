@@ -11,3 +11,6 @@ This is then placed into the stated file path, and any listed commands are execu
 
 
 ```fdf --repo username@password:repository --force-placement``
+
+### Repository File Structure
+Your .fdf files should be in the **ROOT** of your repository, then place your dotfiles in any folder you like. You are able to select the path to said file from your scripts.

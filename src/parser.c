@@ -38,14 +38,15 @@ int parse_dotfile(const char *filename, int force) {
     }
     
     char line[1024];
-    char src[512], dest[512], cmd[512];
+    char src[256], dest[256], cmd[512];
     int line_num = 0;
     int errors = 0;
     int end_fetch_found = 0;
     
     // Get the repo directory from filename (e.g., "repo_tmp/testing.fdf" -> "repo_tmp")
-    char repo_dir[512];
+    char repo_dir[256];
     strncpy(repo_dir, filename, sizeof(repo_dir) - 1);
+    repo_dir[sizeof(repo_dir) - 1] = '\0';
     char *last_slash = strrchr(repo_dir, '/');
     if (last_slash) *last_slash = '\0';
     else strcpy(repo_dir, ".");
@@ -67,7 +68,7 @@ int parse_dotfile(const char *filename, int force) {
         // Parse PUT command
         if (sscanf(trimmed, "PUT %s IN %s", src, dest) == 2) {
             // Build full source path: repo_dir/dotfiles/src
-            char full_src[1024];
+            char full_src[600];
             snprintf(full_src, sizeof(full_src), "%s/dotfiles/%s", repo_dir, src);
             
             printf(DBLUE "[" BLUE " TASK " DBLUE "]" RESET " Placing %s -> %s\n", src, dest);
