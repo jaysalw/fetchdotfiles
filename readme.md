@@ -31,10 +31,8 @@ CONFIG default_dir = myfiles
 CONFIG select_from_root = True
 ```
 
-| Config Key | Description | Default |
-|------------|-------------|---------|
-| `default_dir` | Subdirectory where dotfiles are stored | `dotfiles` |
-| `select_from_root` | If `True`, select files from repo root (ignores `default_dir`) | `False` |
+- `default_dir` - Where your dotfiles are stored in the repo (default: `dotfiles`)
+- `select_from_root` - Set to `True` if you want to grab files straight from the repo root instead of a subfolder
 
 ### Commands
 
@@ -45,87 +43,83 @@ ECHO "<message>"
 END FETCH
 ```
 
-| Command | Description |
-|---------|-------------|
-| `PUT` | Copy a file from repo to destination |
-| `EXECUTE` | Run a shell command |
-| `ECHO` | Print a message (shows as `[ SCRIPT RESPONSE ]`) |
-| `END FETCH` | End of instructions (required) |
-| `#` | Comment (line is ignored) |
+- `PUT` - Copies a file from your repo to wherever you want it
+- `EXECUTE` - Runs a shell command
+- `ECHO` - Prints a message to the terminal
+- `END FETCH` - Tells fdf you're done (always put this at the end!)
+- `#` - Comments, fdf will ignore these lines
 
-## Repository Structure
+## How to Set Up Your Repo
 
-### Default (using `dotfiles/` subdirectory):
+By default fdf looks for files in a `dotfiles/` folder. So your repo should look something like:
 
 ```
-your-repo/
-├── mydotfiles.fdf
+my-dotfiles-repo/
+├── setup.fdf
 └── dotfiles/
     ├── .bashrc
     ├── .vimrc
-    └── config.conf
+    └── whatever.conf
 ```
 
-**mydotfiles.fdf:**
+And your `setup.fdf` would be:
+
 ```
-PUT .bashrc IN /home/user/.bashrc
-PUT .vimrc IN /home/user/.vimrc
-ECHO "Dotfiles installed!"
+# My dotfiles setup script
+PUT .bashrc IN ~/.bashrc
+PUT .vimrc IN ~/.vimrc
+PUT whatever.conf IN /etc/whatever.conf
+ECHO "All done!"
 END FETCH
 ```
 
-### Custom directory:
+### Using a Different Folder
 
-```
-your-repo/
-├── setup.fdf
-└── configs/
-    └── nginx.conf
-```
+Don't want to use `dotfiles/`? No problem:
 
-**setup.fdf:**
 ```
 CONFIG default_dir = configs
+
 PUT nginx.conf IN /etc/nginx/nginx.conf
 END FETCH
 ```
 
-### From root (no subdirectory):
+### Grabbing Files From Root
 
-```
-your-repo/
-├── install.fdf
-├── .bashrc
-└── .zshrc
-```
+If you just want everything in the root of your repo:
 
-**install.fdf:**
 ```
 CONFIG select_from_root = True
-PUT .bashrc IN /home/user/.bashrc
-PUT .zshrc IN /home/user/.zshrc
+
+PUT .bashrc IN ~/.bashrc
+PUT .zshrc IN ~/.zshrc
 END FETCH
 ```
 
-## Example Output
+## Example
 
-```
-[ INFO ] Cloning repository: https://github.com/user/dotfiles
+```sh
+$ ./fdf -r https://github.com/myuser/my-dotfiles
+
+[ INFO ] Cloning repository: https://github.com/myuser/my-dotfiles
 [ INFO ] Found: repo_tmp/setup.fdf
 [ TASK ] Processing dotfile...
 
-[ CONFIG ] default_dir = configs
-[ TASK ] Placing nginx.conf -> /etc/nginx/nginx.conf
-[ SUCCESS ] Placed nginx.conf -> /etc/nginx/nginx.conf
-[ SCRIPT RESPONSE ] Installation complete!
+[ TASK ] Placing .bashrc -> /home/user/.bashrc
+[ SUCCESS ] Placed .bashrc -> /home/user/.bashrc
+[ SCRIPT RESPONSE ] All done!
 [ INFO ] End of fetch instructions
 
 [ SUCCESS ] Dotfiles applied successfully!
 ```
 
-## Security
+## Tips
 
-For private repositories, use SSH keys:
-```sh
-fdf -r git@github.com:username/private-repo.git
-```
+- Use SSH for private repos: `fdf -r git@github.com:user/private-repo.git`
+- Use `-f` flag to skip the "overwrite?" prompts
+- Filenames are case-sensitive on Linux!
+- Make sure the destination directory exists before trying to write to it
+
+## License
+
+Do whatever you want with it lol
