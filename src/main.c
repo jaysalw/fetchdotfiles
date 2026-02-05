@@ -97,7 +97,7 @@ int main(int argc, char *argv[]) {
     }
 
     printf(DBLUE "[" BLUE " TASK " DBLUE "]" RESET " Processing dotfile...\n\n");
-    parse_dotfile(fdf_files[selected], force);
+    int result = parse_dotfile(fdf_files[selected], force);
 
     // Free allocated memory
     for (int i = 0; i < fdf_count; ++i) {
@@ -106,6 +106,12 @@ int main(int argc, char *argv[]) {
 
     // Clean up cloned repo
     system("rm -rf repo_tmp");
+
+    if (result != 0) {
+        printf("\n");
+        printf(DRED "[" RED " FAILED " DRED "]" RESET " Dotfile processing failed!\n\n");
+        return 1;
+    }
 
     printf("\n");
     printf(DGREEN "[" GREEN " SUCCESS " DGREEN "]" RESET " Dotfiles applied successfully!\n\n");
