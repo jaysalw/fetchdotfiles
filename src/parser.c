@@ -18,6 +18,8 @@
 #define DBLUE    "\033[0;34m"
 #define CYAN     "\033[1;36m"
 #define DCYAN    "\033[0;36m"
+#define MAGENTA  "\033[1;35m"
+#define DMAGENTA "\033[0;35m"
 
 static char *trim(char *str) {
     while (isspace((unsigned char)*str)) str++;
@@ -76,11 +78,16 @@ int parse_dotfile(const char *filename, int force) {
             printf(DCYAN "[" CYAN " EXEC " DCYAN "]" RESET " Running: %s\n", cmd);
             execute_command(cmd);
         }
+        // Parse ECHO command
+        else if (sscanf(trimmed, "ECHO \"%[^\"]\"", cmd) == 1) {
+            printf(DMAGENTA "[" MAGENTA " SCRIPT RESPONSE " DMAGENTA "]" RESET " %s\n", cmd);
+        }
         // Unknown/invalid syntax
         else {
             printf(DRED "[" RED " SYNTAX ERROR " DRED "]" RESET " Line %d: %s\n", line_num, trimmed);
             printf("         Expected: PUT <file> IN <path>\n");
             printf("                   EXECUTE \"<command>\"\n");
+            printf("                   ECHO \"<message>\"\n");
             printf("                   END FETCH\n");
             errors++;
         }
