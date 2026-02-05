@@ -16,7 +16,7 @@
 #define CYAN     "\033[1;36m"
 #define DCYAN    "\033[0;36m"
 
-int parse_dotfile(const char *filename) {
+int parse_dotfile(const char *filename, int force) {
     FILE *fp = fopen(filename, "r");
     if (!fp) {
         printf(DRED "[" RED " ERROR " DRED "]" RESET " Failed to open dotfile: %s\n", filename);
@@ -27,7 +27,7 @@ int parse_dotfile(const char *filename) {
     while (fgets(line, sizeof(line), fp)) {
         if (sscanf(line, "PUT %s IN %s", src, dest) == 2) {
             printf(DBLUE "[" BLUE " TASK " DBLUE "]" RESET " Placing %s -> %s\n", src, dest);
-            place_dotfile(src, dest, 0);
+            place_dotfile(src, dest, force);
         } else if (sscanf(line, "EXECUTE \"%[^\"]\"", cmd) == 1) {
             printf(DCYAN "[" CYAN " EXEC " DCYAN "]" RESET " Running: %s\n", cmd);
             execute_command(cmd);

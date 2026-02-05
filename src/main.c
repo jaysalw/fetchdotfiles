@@ -61,8 +61,8 @@ int main(int argc, char *argv[]) {
         while ((dir = readdir(d)) != NULL) {
             size_t len = strlen(dir->d_name);
             if (len > 4 && strcmp(dir->d_name + len - 4, ".fdf") == 0) {
-                fdf_files[fdf_count] = malloc(strlen(dir->d_name) + 20);
-                snprintf(fdf_files[fdf_count], 256, "repo_tmp/%s", dir->d_name);
+                fdf_files[fdf_count] = malloc(512);
+                snprintf(fdf_files[fdf_count], 512, "repo_tmp/%s", dir->d_name);
                 fdf_count++;
             }
         }
@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
     }
 
     printf(CYAN "\n🚀 Processing dotfile...\n\n" RESET);
-    parse_dotfile(fdf_files[selected]);
+    parse_dotfile(fdf_files[selected], force);
 
     // Free allocated memory
     for (int i = 0; i < fdf_count; ++i) {
