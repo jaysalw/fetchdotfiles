@@ -82,7 +82,6 @@ int parse_dotfile(const char *filename, int force) {
                 return 1;
             }
         }
-        }
         // Parse ECHO command
         else if (sscanf(trimmed, "ECHO \"%[^\"]\"", cmd) == 1) {
             printf(DMAGENTA "[" MAGENTA " SCRIPT RESPONSE " DMAGENTA "]" RESET " %s\n", cmd);
