@@ -4,30 +4,40 @@
 #include <sys/stat.h>
 #include "file_ops.h"
 
+// ANSI Color Codes
+#define RESET    "\033[0m"
+#define RED      "\033[1;31m"
+#define DRED     "\033[0;31m"
+#define GREEN    "\033[1;32m"
+#define DGREEN   "\033[0;32m"
+#define YELLOW   "\033[1;33m"
+#define DYELLOW  "\033[0;33m"
+
 int file_exists(const char *path) {
     struct stat st;
     return stat(path, &st) == 0;
 }
 
 void print_colored_warning(const char *msg) {
-    printf("\033[1;33m[ WARNING ] %s\033[0m\n", msg);
+    printf(DYELLOW "[" YELLOW " WARNING " DYELLOW "]" RESET " %s\n", msg);
 }
 
 int place_dotfile(const char *src, const char *dest, int force) {
     if (file_exists(dest) && !force) {
         print_colored_warning("A dot file already exists:");
-        printf("DOTFILE - %s\n", dest);
-        printf("Would you like to overwrite the file? [Y/N] ");
+        printf("            DOTFILE - %s\n", dest);
+        printf("            Overwrite? [Y/N]: ");
         char ans = getchar();
+        while (getchar() != '\n');
         if (ans != 'Y' && ans != 'y') {
-            printf("Skipping %s\n", dest);
+            printf(DYELLOW "[" YELLOW " INFO " DYELLOW "]" RESET " Skipping %s\n", dest);
             return 1;
         }
     }
     FILE *f_src = fopen(src, "rb");
     FILE *f_dest = fopen(dest, "wb");
     if (!f_src || !f_dest) {
-        perror("File open error");
+        printf(DRED "[" RED " ERROR " DRED "]" RESET " File open error: %s -> %s\n", src, dest);
         if (f_src) fclose(f_src);
         if (f_dest) fclose(f_dest);
         return 1;
@@ -39,6 +49,6 @@ int place_dotfile(const char *src, const char *dest, int force) {
     }
     fclose(f_src);
     fclose(f_dest);
-    printf("Placed %s -> %s\n", src, dest);
+    printf(DGREEN "[" GREEN " SUCCESS " DGREEN "]" RESET " Placed %s -> %s\n", src, dest);
     return 0;
 }
