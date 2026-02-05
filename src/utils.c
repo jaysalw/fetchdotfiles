@@ -9,11 +9,13 @@
 #define GREEN    "\033[1;32m"
 #define DGREEN   "\033[0;32m"
 
-void execute_command(const char *cmd) {
+int execute_command(const char *cmd) {
     int result = system(cmd);
     if (result == 0) {
         printf(DGREEN "[" GREEN " SUCCESS " DGREEN "]" RESET " Command completed\n");
+        return 0;
     } else {
         printf(DRED "[" RED " ERROR " DRED "]" RESET " Command failed (exit: %d)\n", result);
+        return 1;
     }
 }

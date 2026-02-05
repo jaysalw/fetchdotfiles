@@ -43,13 +43,8 @@ int parse_dotfile(const char *filename, int force) {
     int errors = 0;
     int end_fetch_found = 0;
     
-    // Get the repo directory from filename (e.g., "repo_tmp/testing.fdf" -> "repo_tmp")
-    char repo_dir[256];
-    strncpy(repo_dir, filename, sizeof(repo_dir) - 1);
-    repo_dir[sizeof(repo_dir) - 1] = '\0';
-    char *last_slash = strrchr(repo_dir, '/');
-    if (last_slash) *last_slash = '\0';
-    else strcpy(repo_dir, ".");
+    // Always use repo_tmp as base directory for dotfiles
+    const char *repo_dir = "repo_tmp";
     
     while (fgets(line, sizeof(line), fp)) {
         line_num++;
@@ -67,17 +62,26 @@ int parse_dotfile(const char *filename, int force) {
         
         // Parse PUT command
         if (sscanf(trimmed, "PUT %s IN %s", src, dest) == 2) {
-            // Build full source path: repo_dir/dotfiles/src
+            // Build full source path: repo_tmp/dotfiles/src
             char full_src[600];
             snprintf(full_src, sizeof(full_src), "%s/dotfiles/%s", repo_dir, src);
             
             printf(DBLUE "[" BLUE " TASK " DBLUE "]" RESET " Placing %s -> %s\n", src, dest);
-            place_dotfile(full_src, dest, force);
+            if (place_dotfile(full_src, dest, force) != 0) {
+                printf(DRED "[" RED " FATAL " DRED "]" RESET " Stopping due to error\n");
+                fclose(fp);
+                return 1;
+            }
         }
         // Parse EXECUTE command
         else if (sscanf(trimmed, "EXECUTE \"%[^\"]\"", cmd) == 1) {
             printf(DCYAN "[" CYAN " EXEC " DCYAN "]" RESET " Running: %s\n", cmd);
-            execute_command(cmd);
+            if (execute_command(cmd) != 0) {
+                printf(DRED "[" RED " FATAL " DRED "]" RESET " Command failed, stopping\n");
+                fclose(fp);
+                return 1;
+            }
+        }
         }
         // Parse ECHO command
         else if (sscanf(trimmed, "ECHO \"%[^\"]\"", cmd) == 1) {
