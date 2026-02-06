@@ -13,6 +13,8 @@
 #define DGREEN   "\033[0;32m"
 #define YELLOW   "\033[1;33m"
 #define DYELLOW  "\033[0;33m"
+#define CYAN     "\033[1;36m"
+#define DCYAN    "\033[0;36m"
 
 int file_exists(const char *path) {
     struct stat st;
