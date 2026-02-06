@@ -4,6 +4,21 @@ A simple but efficient way to transfer your dotfiles from one setup to another.
 
 ## Installation
 
+**Dependencies:**
+- `ncurses` - Required for the diff viewer TUI
+
+```sh
+# Debian/Ubuntu
+sudo apt install libncurses-dev
+
+# Fedora
+sudo dnf install ncurses-devel
+
+# Arch
+sudo pacman -S ncurses
+```
+
+**Build & Install:**
 ```sh
 make
 sudo cp fdf /usr/local/bin/
