@@ -95,9 +95,9 @@ int parse_dotfile(const char *filename, int force) {
                 snprintf(full_src, sizeof(full_src), "%s/%s/%s", repo_dir, default_dir, src);
             }
             
-            printf(DBLUE "[" BLUE " TASK " DBLUE "]" RESET " Placing %s -> %s\n", src, dest);
+            printf(DBLUE "[" BLUE "TASK" DBLUE "]" RESET " Placing %s -> %s\n", src, dest);
             if (place_dotfile(full_src, dest, force) != 0) {
-                printf(DRED "[" RED " FATAL " DRED "]" RESET " Stopping due to error\n");
+                printf(DRED "[" RED "FATAL" DRED "]" RESET " Stopping due to error\n");
                 fclose(fp);
                 return 1;
             }

@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
 
     int selected = 0;
     if (fdf_count > 1) {
-        printf(DYELLOW "[" YELLOW " INFO " DYELLOW "]" RESET " Multiple .fdf files found:\n");
+        printf(DYELLOW "[" YELLOW "INFO" DYELLOW "]" RESET " Multiple .fdf files found:\n");
         for (int i = 0; i < fdf_count; ++i) {
             printf("         [%d] %s\n", i+1, fdf_files[i]);
         }
