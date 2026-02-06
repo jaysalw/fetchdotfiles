@@ -12,13 +12,14 @@ sudo cp fdf /usr/local/bin/
 ## Usage
 
 ```sh
-fdf --repo <repo_url> [--force-placement]
-fdf -r <repo_url> [-f]
+fdf --repo <repo_url> [--force-placement] [--show-diff]
+fdf -r <repo_url> [-f] [-d]
 ```
 
 **Options:**
 - `-r, --repo` - Repository URL (git/GitHub SSH or HTTPS)
 - `-f, --force-placement` - Overwrite existing files without prompting
+- `-d, --show-diff` - Show a side-by-side diff in a TUI before placing each file
 
 ## FDF Language Syntax
 
@@ -117,8 +118,24 @@ $ ./fdf -r https://github.com/myuser/my-dotfiles
 
 - Use SSH for private repos: `fdf -r git@github.com:user/private-repo.git`
 - Use `-f` flag to skip the "overwrite?" prompts
+- Use `-d` flag to see a side-by-side diff before files are placed
 - Filenames are case-sensitive on Linux!
 - Make sure the destination directory exists before trying to write to it
+
+## Diff Viewer
+
+When using `--show-diff` or `-d`, fdf will open an ncurses-based TUI showing a side-by-side comparison of the existing file and the new file before each placement.
+
+**Controls:**
+- `↑`/`↓` or `j`/`k` - Scroll line by line
+- `PgUp`/`PgDn` - Scroll by page
+- `Home`/`End` or `g`/`G` - Jump to start/end
+- `q` or `ESC` - Close the diff viewer and continue
+
+**Color Legend:**
+- 🟢 Green (`+`) - Lines added in the new file
+- 🔴 Red (`-`) - Lines removed from the existing file  
+- 🟡 Yellow (`~`) - Lines that were changed
 
 ## License
 

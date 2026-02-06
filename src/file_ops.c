@@ -3,6 +3,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include "file_ops.h"
+#include "diff_viewer.h"
 
 // ANSI Color Codes
 #define RESET    "\033[0m"
@@ -27,6 +28,12 @@ int place_dotfile(const char *src, const char *dest, int force) {
     if (!file_exists(src)) {
         printf(DRED "[" RED "ERROR" DRED "]" RESET " Source file not found: %s\n", src);
         return 1;
+    }
+    
+    // Show diff if enabled and destination exists
+    if (is_diff_enabled() && file_exists(dest)) {
+        printf(DCYAN "[" CYAN "DIFF" DCYAN "]" RESET " Showing diff for %s\n", dest);
+        show_diff_tui(dest, src);
     }
     
     if (file_exists(dest) && !force) {

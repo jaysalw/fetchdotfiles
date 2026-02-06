@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "parser.h"
+#include "diff_viewer.h"
 
 // ANSI Color Codes
 #define RESET    "\033[0m"
@@ -21,11 +22,12 @@ void print_usage() {
     printf(CYAN "FDF" RESET " - Fetch Dot Files\n");
     printf("-----------------------------------\n\n");
     printf("Usage:\n");
-    printf("  fdf --repo <repo_url> [--force-placement]\n");
-    printf("  fdf -r <repo_url> [-f]\n\n");
+    printf("  fdf --repo <repo_url> [--force-placement] [--show-diff]\n");
+    printf("  fdf -r <repo_url> [-f] [-d]\n\n");
     printf("Options:\n");
     printf("  -r, --repo             Repository URL (git/GitHub)\n");
-    printf("  -f, --force-placement  Overwrite existing files\n\n");
+    printf("  -f, --force-placement  Overwrite existing files\n");
+    printf("  -d, --show-diff        Show diff in TUI before placing files\n\n");
 }
 
 
@@ -34,6 +36,7 @@ void print_usage() {
 int main(int argc, char *argv[]) {
     char repo[512] = {0};
     int force = 0;
+    int show_diff = 0;
     if (argc < 3) {
         print_usage();
         return 1;
@@ -43,8 +46,13 @@ int main(int argc, char *argv[]) {
             strncpy(repo, argv[++i], sizeof(repo)-1);
         } else if (strcmp(argv[i], "--force-placement") == 0 || strcmp(argv[i], "-f") == 0) {
             force = 1;
+        } else if (strcmp(argv[i], "--show-diff") == 0 || strcmp(argv[i], "-d") == 0) {
+            show_diff = 1;
         }
     }
+    
+    // Set global diff mode
+    set_diff_enabled(show_diff);
     if (repo[0] == '\0') {
         print_usage();
         return 1;
