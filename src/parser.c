@@ -33,7 +33,7 @@ static char *trim(char *str) {
 int parse_dotfile(const char *filename, int force) {
     FILE *fp = fopen(filename, "r");
     if (!fp) {
-        printf(DRED "[" RED " ERROR " DRED "]" RESET " Failed to open dotfile: %s\n", filename);
+        printf(DRED "[" RED "ERROR" DRED "]" RESET " Failed to open dotfile: %s\n", filename);
         return 1;
     }
     
@@ -60,7 +60,7 @@ int parse_dotfile(const char *filename, int force) {
         // Check for END FETCH
         if (strcmp(trimmed, "END FETCH") == 0) {
             end_fetch_found = 1;
-            printf(DGREEN "[" GREEN " INFO " DGREEN "]" RESET " End of fetch instructions\n");
+            printf(DGREEN "[" GREEN "INFO" DGREEN "]" RESET " End of fetch instructions\n");
             break;
         }
         
@@ -70,17 +70,17 @@ int parse_dotfile(const char *filename, int force) {
             if (strcmp(config_key, "default_dir") == 0) {
                 strncpy(default_dir, config_val, sizeof(default_dir) - 1);
                 default_dir[sizeof(default_dir) - 1] = '\0';
-                printf(DYELLOW "[" YELLOW " CONFIG " DYELLOW "]" RESET " default_dir = %s\n", default_dir);
+                printf(DYELLOW "[" YELLOW "CONFIG" DYELLOW "]" RESET " default_dir = %s\n", default_dir);
             } else if (strcmp(config_key, "select_from_root") == 0) {
                 if (strcmp(config_val, "True") == 0 || strcmp(config_val, "true") == 0 || strcmp(config_val, "1") == 0) {
                     select_from_root = 1;
-                    printf(DYELLOW "[" YELLOW " CONFIG " DYELLOW "]" RESET " select_from_root = True\n");
+                    printf(DYELLOW "[" YELLOW "CONFIG" DYELLOW "]" RESET " select_from_root = True\n");
                 } else {
                     select_from_root = 0;
-                    printf(DYELLOW "[" YELLOW " CONFIG " DYELLOW "]" RESET " select_from_root = False\n");
+                    printf(DYELLOW "[" YELLOW "CONFIG" DYELLOW "]" RESET " select_from_root = False\n");
                 }
             } else {
-                printf(DYELLOW "[" YELLOW " WARNING " DYELLOW "]" RESET " Unknown config key: %s\n", config_key);
+                printf(DYELLOW "[" YELLOW "WARNING" DYELLOW "]" RESET " Unknown config key: %s\n", config_key);
             }
             continue;
         }
@@ -106,18 +106,18 @@ int parse_dotfile(const char *filename, int force) {
         else if (sscanf(trimmed, "EXECUTE \"%[^\"]\"", cmd) == 1) {
             printf(DCYAN "[" CYAN " EXEC " DCYAN "]" RESET " Running: %s\n", cmd);
             if (execute_command(cmd) != 0) {
-                printf(DRED "[" RED " FATAL " DRED "]" RESET " Command failed, stopping\n");
+                printf(DRED "[" RED "FATAL" DRED "]" RESET " Command failed, stopping\n");
                 fclose(fp);
                 return 1;
             }
         }
         // Parse ECHO command
         else if (sscanf(trimmed, "ECHO \"%[^\"]\"", cmd) == 1) {
-            printf(DMAGENTA "[" MAGENTA " SCRIPT RESPONSE " DMAGENTA "]" RESET " %s\n", cmd);
+            printf(DMAGENTA "[" MAGENTA "SCRIPT RESPONSE" DMAGENTA "]" RESET " %s\n", cmd);
         }
         // Unknown/invalid syntax
         else {
-            printf(DRED "[" RED " SYNTAX ERROR " DRED "]" RESET " Line %d: %s\n", line_num, trimmed);
+            printf(DRED "[" RED "SYNTAX ERROR" DRED "]" RESET " Line %d: %s\n", line_num, trimmed);
             printf("         Expected: CONFIG <key> = <value>\n");
             printf("                   PUT <file> IN <path>\n");
             printf("                   EXECUTE \"<command>\"\n");
@@ -130,11 +130,11 @@ int parse_dotfile(const char *filename, int force) {
     fclose(fp);
     
     if (!end_fetch_found) {
-        printf(DYELLOW "[" YELLOW " WARNING " DYELLOW "]" RESET " No 'END FETCH' found in dotfile\n");
+        printf(DYELLOW "[" YELLOW "WARNING" DYELLOW "]" RESET " No 'END FETCH' found in dotfile\n");
     }
     
     if (errors > 0) {
-        printf(DRED "[" RED " ERROR " DRED "]" RESET " %d syntax error(s) found\n", errors);
+        printf(DRED "[" RED "ERROR" DRED "]" RESET " %d syntax error(s) found\n", errors);
         return 1;
     }
     

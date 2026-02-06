@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
     }
     char cmd[1024];
     snprintf(cmd, sizeof(cmd), "git clone %s repo_tmp", repo);
-    printf(DCYAN "[" CYAN " INFO " DCYAN "]" RESET " Cloning repository: %s\n\n", repo);
+    printf(DCYAN "[" CYAN "INFO" DCYAN "]" RESET " Cloning repository: %s\n\n", repo);
     system(cmd);
 
     // Find all .fdf files in repo_tmp
@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (fdf_count == 0) {
-        printf(DRED "[" RED " ERROR " DRED "]" RESET " No .fdf files found in repo_tmp\n");
+        printf(DRED "[" RED "ERROR" DRED "]" RESET " No .fdf files found in repo_tmp\n");
         system("rm -rf repo_tmp");
         return 1;
     }
@@ -87,16 +87,16 @@ int main(int argc, char *argv[]) {
         printf("         Select file [1-%d]: ", fdf_count);
         scanf("%d", &selected);
         if (selected < 1 || selected > fdf_count) {
-            printf(DRED "[" RED " ERROR " DRED "]" RESET " Invalid selection.\n");
+            printf(DRED "[" RED "ERROR" DRED "]" RESET " Invalid selection.\n");
             system("rm -rf repo_tmp");
             return 1;
         }
         selected--;
     } else {
-        printf(DGREEN "[" GREEN " INFO " DGREEN "]" RESET " Found: %s\n", fdf_files[0]);
+        printf(DGREEN "[" GREEN "INFO" DGREEN "]" RESET " Found: %s\n", fdf_files[0]);
     }
 
-    printf(DBLUE "[" BLUE " TASK " DBLUE "]" RESET " Processing dotfile...\n\n");
+    printf(DBLUE "[" BLUE "TASK" DBLUE "]" RESET " Processing dotfile...\n\n");
     int result = parse_dotfile(fdf_files[selected], force);
 
     // Free allocated memory
@@ -109,11 +109,11 @@ int main(int argc, char *argv[]) {
 
     if (result != 0) {
         printf("\n");
-        printf(DRED "[" RED " FAILED " DRED "]" RESET " Dotfile processing failed!\n\n");
+        printf(DRED "[" RED "FAILED" DRED "]" RESET " Dotfile processing failed!\n\n");
         return 1;
     }
 
     printf("\n");
-    printf(DGREEN "[" GREEN " SUCCESS " DGREEN "]" RESET " Dotfiles applied successfully!\n\n");
+    printf(DGREEN "[" GREEN "SUCCESS" DGREEN "]" RESET " Dotfiles applied successfully!\n\n");
     return 0;
 }

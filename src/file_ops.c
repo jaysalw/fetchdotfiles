@@ -19,13 +19,13 @@ int file_exists(const char *path) {
 }
 
 void print_colored_warning(const char *msg) {
-    printf(DYELLOW "[" YELLOW " WARNING " DYELLOW "]" RESET " %s\n", msg);
+    printf(DYELLOW "[" YELLOW "WARNING" DYELLOW "]" RESET " %s\n", msg);
 }
 
 int place_dotfile(const char *src, const char *dest, int force) {
     // Check if source file exists first
     if (!file_exists(src)) {
-        printf(DRED "[" RED " ERROR " DRED "]" RESET " Source file not found: %s\n", src);
+        printf(DRED "[" RED "ERROR" DRED "]" RESET " Source file not found: %s\n", src);
         return 1;
     }
     
@@ -36,18 +36,18 @@ int place_dotfile(const char *src, const char *dest, int force) {
         char ans = getchar();
         while (getchar() != '\n');
         if (ans != 'Y' && ans != 'y') {
-            printf(DYELLOW "[" YELLOW " INFO " DYELLOW "]" RESET " Skipping %s\n", dest);
+            printf(DYELLOW "[" YELLOW "INFO" DYELLOW "]" RESET " Skipping %s\n", dest);
             return 0;  // Not an error, user chose to skip
         }
     }
     FILE *f_src = fopen(src, "rb");
     FILE *f_dest = fopen(dest, "wb");
     if (!f_src) {
-        printf(DRED "[" RED " ERROR " DRED "]" RESET " Cannot read source: %s\n", src);
+        printf(DRED "[" RED "ERROR" DRED "]" RESET " Cannot read source: %s\n", src);
         return 1;
     }
     if (!f_dest) {
-        printf(DRED "[" RED " ERROR " DRED "]" RESET " Cannot write to destination: %s\n", dest);
+        printf(DRED "[" RED "ERROR" DRED "]" RESET " Cannot write to destination: %s\n", dest);
         printf("            (Check permissions or if parent directory exists)\n");
         fclose(f_src);
         return 1;
@@ -59,6 +59,6 @@ int place_dotfile(const char *src, const char *dest, int force) {
     }
     fclose(f_src);
     fclose(f_dest);
-    printf(DGREEN "[" GREEN " SUCCESS " DGREEN "]" RESET " Placed %s -> %s\n", src, dest);
+    printf(DGREEN "[" GREEN "SUCCESS" DGREEN "]" RESET " Placed %s -> %s\n", src, dest);
     return 0;
 }
