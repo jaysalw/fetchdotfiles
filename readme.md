@@ -2,6 +2,8 @@
 
 A simple but efficient way to transfer your dotfiles from one setup to another.
 
+Want an example repository? See https://github.com/jaysalw/fdf_testing/
+
 ## Installation
 
 **Dependencies:**
