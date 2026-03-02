@@ -1,9 +1,7 @@
-name: Build and Create Release
+name: Auto Build and Release
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -14,7 +12,8 @@ jobs:
 
     steps:
 
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y build-essential libncurses-dev
@@ -22,10 +21,16 @@ jobs:
       - name: Build
         run: make
 
-      - name: Rename binary
+      - name: Prepare binary
         run: mv fdf fdf-linux-x86_64
 
-      - name: Create Release and Upload Binary
+      - name: Generate version
+        id: version
+        run: echo "tag=v$(date +'%Y.%m.%d.%H%M%S')" >> $GITHUB_OUTPUT
+
+      - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: Release ${{ steps.version.outputs.tag }}
           files: fdf-linux-x86_64
