@@ -1,0 +1,28 @@
+name: Build and Attach fdf Binary
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essential libncurses-dev
+
+      - name: Build using Makefile
+        run: make
+
+      - name: Rename binary for release
+        run: mv fdf fdf-linux-x86_64
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: fdf-linux-x86_64
