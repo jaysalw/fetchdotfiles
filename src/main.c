@@ -117,11 +117,11 @@ int main(int argc, char *argv[]) {
 
     if (result != 0) {
         printf("\n");
-        printf(DRED "[" RED "FAILED" DRED "]" RESET " Dotfile processing failed!\n\n");
+        printf(DRED "[" RED "FAILED" DRED "]" RESET " Dotfile could not be fetched.\n\n");
         return 1;
     }
 
     printf("\n");
-    printf(DGREEN "[" GREEN "SUCCESS" DGREEN "]" RESET " Dotfiles applied successfully!\n\n");
+    printf(DGREEN "[" GREEN "SUCCESS" DGREEN "]" RESET " Dotfiles fetched successfully.\n\n");
     return 0;
 }
