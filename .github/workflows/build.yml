@@ -21,16 +21,23 @@ jobs:
       - name: Build
         run: make
 
-      - name: Prepare binary
+      - name: Rename binary
         run: mv fdf fdf-linux-x86_64
 
-      - name: Generate version
-        id: version
-        run: echo "tag=v$(date +'%Y.%m.%d.%H%M%S')" >> $GITHUB_OUTPUT
+      - name: Generate tag
+        id: tag
+        run: echo "TAG=v$(date +'%Y.%m.%d.%H%M%S')" >> $GITHUB_ENV
 
-      - name: Create Release
+      - name: Create Git tag
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag $TAG
+          git push origin $TAG
+
+      - name: Create Release and Upload Binary
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.version.outputs.tag }}
-          name: Release ${{ steps.version.outputs.tag }}
+          tag_name: ${{ env.TAG }}
+          name: Release ${{ env.TAG }}
           files: fdf-linux-x86_64
