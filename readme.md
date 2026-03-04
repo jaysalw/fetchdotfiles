@@ -4,6 +4,16 @@ A simple but efficient way to transfer your dotfiles from one setup to another.
 
 Want an example repository? See https://github.com/jaysalw/fdf_testing/
 
+
+**NOTES:**
+I am currently creating a **website** for this project using the domain **fetchdots.net** and will include:
+
+* Script Validator
+* In-depth documentation
+* Release changelog with binaries and pre-compiled versions
+
+And more :)
+
 ## Installation
 
 **Dependencies:**
@@ -127,7 +137,6 @@ $ ./fdf -r https://github.com/myuser/my-dotfiles
 [ SUCCESS ] Placed .bashrc -> /home/user/.bashrc
 [ SCRIPT RESPONSE ] All done!
 [ INFO ] End of fetch instructions
-
 [ SUCCESS ] Dotfiles applied successfully!
 ```
 
@@ -156,4 +165,4 @@ When using `--show-diff` or `-d`, fdf will open an ncurses-based TUI showing a s
 
 ## License
 
-Do whatever you want with it lol
+Do whatever you want with it lol (planning on using an open source license!!)
