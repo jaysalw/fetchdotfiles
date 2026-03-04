@@ -104,7 +104,7 @@ int main(int argc, char *argv[]) {
         printf(DGREEN "[" GREEN "INFO" DGREEN "]" RESET " Found: %s\n", fdf_files[0]);
     }
 
-    printf(DBLUE "[" BLUE "TASK" DBLUE "]" RESET " Processing dotfile...\n\n");
+    printf(DBLUE "[" BLUE "TASK" DBLUE "]" RESET " Processing dotfile...\n");
     int result = parse_dotfile(fdf_files[selected], force);
 
     // Free allocated memory
@@ -116,12 +116,12 @@ int main(int argc, char *argv[]) {
     system("rm -rf repo_tmp");
 
     if (result != 0) {
-        printf("\n");
-        printf(DRED "[" RED "FAILED" DRED "]" RESET " Dotfile could not be fetched.\n\n");
+        //printf("\n");
+        printf(DRED "[" RED "FAILED" DRED "]" RESET " Dotfile could not be fetched.\n");
         return 1;
     }
 
-    printf("\n");
-    printf(DGREEN "[" GREEN "SUCCESS" DGREEN "]" RESET " Dotfiles fetched successfully.\n\n");
+    //printf("\n");
+    printf(DGREEN "[" GREEN "SUCCESS" DGREEN "]" RESET " Dotfiles fetched successfully.\n");
     return 0;
 }
