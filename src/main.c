@@ -17,6 +17,15 @@
 #define CYAN     "\033[1;36m"
 #define DCYAN    "\033[0;36m"
 
+void print_version(){ 
+    printf("\n")
+    printf("fdf v1.0")
+}
+
+void print_docs(){ 
+    printf("\n")
+    // DOCS GO HERE!! ??
+}
 void print_usage() {
     printf("\n");
     printf(CYAN "FDF" RESET " - Fetch Dot Files\n");
