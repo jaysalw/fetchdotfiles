@@ -2,22 +2,19 @@
 
 A simple but efficient way to transfer your dotfiles from one setup to another.
 
-## Features 
-* Custom SQL/C Style Syntax for fdf scripts (partial pseudo)
-* Rollback on last fdf script ran
-* DIFF viewer for any files which already exist.
-* Uses git to pull and store your dotfiles. ***Plans for an automatic syncing daemon for both git and an "fdf server" in the future. ***
-* Completely Customisable with the ``CONFIG`` syntax allowing you to select where you store your dotfiles, thus allowing for better organisation.
-* Everything is logged into the terminal
-* Support for SSH when using a private repository (e.g. ``fdf -r git@github.com:user/private-repo.git``)
-* Easy to compile and use. (**Optional install script based on python available soon**) - I'm thinking about putting this on several package managers.
-
 **Website:** [fetchdots.net](https://fetchdots.net)
-The website includes helpful features such as:
 
-* Script Validation
-* Documentation
-* Releases, any current issues and project stats fetched from GitHub
+Want an example repository? See https://github.com/jaysalw/fdf_testing/
+
+
+**NOTES:**
+I am currently creating a **website** for this project using the domain **fetchdots.net** and will include:
+
+* Script Validator
+* In-depth documentation
+* Release changelog with binaries and pre-compiled versions
+
+And more :)
 
 ## Installation
 
