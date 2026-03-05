@@ -2,17 +2,22 @@
 
 A simple but efficient way to transfer your dotfiles from one setup to another.
 
-Want an example repository? See https://github.com/jaysalw/fdf_testing/
+## Features 
+* Custom SQL/C Style Syntax for fdf scripts (partial pseudo)
+* Rollback on last fdf script ran
+* DIFF viewer for any files which already exist.
+* Uses git to pull and store your dotfiles. ***Plans for an automatic syncing daemon for both git and an "fdf server" in the future. ***
+* Completely Customisable with the ``CONFIG`` syntax allowing you to select where you store your dotfiles, thus allowing for better organisation.
+* Everything is logged into the terminal
+* Support for SSH when using a private repository (e.g. ``fdf -r git@github.com:user/private-repo.git``)
+* Easy to compile and use. (**Optional install script based on python available soon**) - I'm thinking about putting this on several package managers.
 
+**Website:** [fetchdots.net](https://fetchdots.net)
+The website includes helpful features such as:
 
-**NOTES:**
-I am currently creating a **website** for this project using the domain **fetchdots.net** and will include:
-
-* Script Validator
-* In-depth documentation
-* Release changelog with binaries and pre-compiled versions
-
-And more :)
+* Script Validation
+* Documentation
+* Releases, any current issues and project stats fetched from GitHub
 
 ## Installation
 
@@ -41,12 +46,16 @@ sudo cp fdf /usr/local/bin/
 ```sh
 fdf --repo <repo_url> [--force-placement] [--show-diff]
 fdf -r <repo_url> [-f] [-d]
+fdf rollback
+fdf docs
 ```
 
 **Options:**
 - `-r, --repo` - Repository URL (git/GitHub SSH or HTTPS)
 - `-f, --force-placement` - Overwrite existing files without prompting
 - `-d, --show-diff` - Show a side-by-side diff in a TUI before placing each file
+- `rollback` - Undo the latest file changes made by fdf
+- `docs` - View fdf documentation in ncurses
 
 ## FDF Language Syntax
 
@@ -145,8 +154,29 @@ $ ./fdf -r https://github.com/myuser/my-dotfiles
 - Use SSH for private repos: `fdf -r git@github.com:user/private-repo.git`
 - Use `-f` flag to skip the "overwrite?" prompts
 - Use `-d` flag to see a side-by-side diff before files are placed
+- If the last fetch changed files you don't want, run `fdf rollback`
 - Filenames are case-sensitive on Linux!
 - Make sure the destination directory exists before trying to write to it
+
+## Rollback
+
+Running `fdf rollback` reverts file placements from the most recent fetch run.
+
+- Files that were overwritten are restored from backup.
+- Files that were newly created by fdf are removed.
+- Rollback currently targets `PUT` file operations only.
+
+## Documentation
+
+Running `fdf docs` opens an ncurses-based documentation viewer with comprehensive usage information, syntax examples, and troubleshooting tips.
+
+You can customize the documentation by editing `~/.fdf_docs.txt` with your favorite text editor. It will automatically display when you run `fdf docs`.
+
+**Navigation in docs viewer:**
+- `q` or `ESC` - Exit viewer
+- `↑`/`↓` - Scroll line by line  
+- `PgUp`/`PgDn` - Scroll by page
+- `Home`/`End` - Jump to start/end
 
 ## Diff Viewer
 
