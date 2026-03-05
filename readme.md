@@ -20,7 +20,9 @@ And more :)
 
 If you're on Arch Linux and have an AUR helper such as ``yay`` installed, you can quickly install the latest STABLE release of **fetchdotfiles** by running:
 
-```yay -Sy fetchdots```
+```
+yay -Sy fetchdots
+```
 
 I plan to add this to other package managers when I have the time.
 
