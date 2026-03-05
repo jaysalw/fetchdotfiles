@@ -29,11 +29,14 @@ static void print_usage(void) {
     printf("Website: " CYAN "https://fetchdots.net" RESET "\n\n");
     printf("Usage:\n");
     printf("  fdf --repo <repo_url> [--force-placement] [--show-diff]\n");
-    printf("  fdf -r <repo_url> [-f] [-d]\n\n");
+    printf("  fdf -r <repo_url> [-f] [-d]\n");
+    printf("  fdf --local <file.fdf> [--force-placement] [--show-diff]\n");
+    printf("  fdf -l <file.fdf> [-f] [-d]\n\n");
     printf("  fdf rollback\n");
     printf("  fdf docs\n\n");
     printf("Options:\n");
     printf("  -r, --repo             Repository URL (git/GitHub)\n");
+    printf("  -l, --local            Local .fdf file path\n");
     printf("  -f, --force-placement  Overwrite existing files\n");
     printf("  -d, --show-diff        Show diff in TUI before placing files\n");
     printf("  rollback               Undo latest file changes\n");
@@ -110,11 +113,13 @@ static int select_fdf_file(char *fdf_files[], int count) {
 int main(int argc, char *argv[]) {
     char *fdf_files[MAX_FDF_FILES] = {0};
     char repo[512] = {0};
+    char local_file[512] = {0};
     int force = 0;
     int show_diff = 0;
     int selected;
     int fdf_count;
     int parse_result;
+    int is_local = 0;
 
     if (argc == 2 && strcmp(argv[1], "rollback") == 0) {
         return perform_rollback();
@@ -138,6 +143,9 @@ int main(int argc, char *argv[]) {
     for (int i = 1; i < argc; ++i) {
         if ((strcmp(argv[i], "--repo") == 0 || strcmp(argv[i], "-r") == 0) && i+1 < argc) {
             strncpy(repo, argv[++i], sizeof(repo)-1);
+        } else if ((strcmp(argv[i], "--local") == 0 || strcmp(argv[i], "-l") == 0) && i+1 < argc) {
+            strncpy(local_file, argv[++i], sizeof(local_file)-1);
+            is_local = 1;
         } else if (strcmp(argv[i], "--force-placement") == 0 || strcmp(argv[i], "-f") == 0) {
             force = 1;
         } else if (strcmp(argv[i], "--show-diff") == 0 || strcmp(argv[i], "-d") == 0) {
@@ -147,6 +155,26 @@ int main(int argc, char *argv[]) {
     
     // Set global diff mode
     set_diff_enabled(show_diff);
+    
+    if (is_local) {
+        // Handle local file mode
+        printf(DBLUE "[" BLUE "TASK" DBLUE "]" RESET " Processing local dotfile: %s\n", local_file);
+        
+        if (rollback_session_start() != 0) {
+            return 1;
+        }
+        
+        parse_result = parse_dotfile(local_file, force);
+        
+        if (parse_result != 0) {
+            printf(DRED "[" RED "FAILED" DRED "]" RESET " Dotfile could not be fetched.\n");
+            return 1;
+        }
+        
+        printf(DGREEN "[" GREEN "SUCCESS" DGREEN "]" RESET " Dotfiles fetched successfully.\n");
+        return 0;
+    }
+    
     if (repo[0] == '\0') {
         print_usage();
         return 1;
